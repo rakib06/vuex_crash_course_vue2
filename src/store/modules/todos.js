@@ -54,6 +54,24 @@ const actions = {
         // mutation type
         commit('setTodos', response.data);
         console.log(response)
+    },
+
+    async updateTodo({commit}, updToodo){
+        
+        /***
+         * Frontend 
+         */
+
+        commit('updateTodo', updToodo)
+        /**
+         * for bakend 
+         */
+        const response = await axios.put(
+            `https://jsonplaceholder.typicode.com/todos/${updToodo.id}`
+        )
+        
+        
+        console.log(response)
     }
 };
 
@@ -62,7 +80,15 @@ const mutations = {
     newTodo: (state, todo) => state.todos.unshift(todo),
     removeTodo:(state, id) => (
         state.todos = state.todos.filter(todo => todo.id !== id )
-    )
+    ),
+    updateTodo:(state, updToodo) => {
+        const index = state.todos.findIndex(todo => todo.id === updToodo.id);
+        // modify the Todo Item
+        if (index !== -1){
+            // Have to read documentation about splice, why 1
+            state.todos.splice(index, 1, updToodo)
+        }
+    }
     
 };
 
